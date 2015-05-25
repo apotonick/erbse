@@ -1,13 +1,7 @@
-##
-## $Release: 2.7.0 $
-## copyright(c) 2006-2011 kuwata-lab.com all rights reserved.
-##
-
-require 'erubis/engine'
-require 'erubis/enhancer'
+require 'erbse/enhancer'
 
 
-module Erubis
+module Erbse
 
 
   ##

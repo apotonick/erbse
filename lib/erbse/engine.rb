@@ -1,16 +1,10 @@
-##
-## $Release: 2.7.0 $
-## copyright(c) 2006-2011 kuwata-lab.com all rights reserved.
-##
+require 'erbse/generator'
+require 'erbse/converter'
+require 'erbse/evaluator'
+require 'erbse/context'
 
 
-require 'erubis/generator'
-require 'erubis/converter'
-require 'erubis/evaluator'
-require 'erubis/context'
-
-
-module Erubis
+module Erbse
 
 
   ##
