@@ -1,6 +1,3 @@
-require 'erbse/context'
-
-
 module Erbse
   # Compiles the runtime method for an ERB input string.
   class Template

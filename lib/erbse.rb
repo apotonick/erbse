@@ -45,7 +45,5 @@ module Erbse
 end
 
 require "erbse/converter"
-
 require "erbse/template"
-
 require "erbse/eruby"
