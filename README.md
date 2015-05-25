@@ -43,6 +43,10 @@ Try 'ruby erubybenchmark.rb' in benchmark directory.
 
 MIT License
 
+# Contributors
+
+* @iazel
+* @seuros
 
 
 # Authors
