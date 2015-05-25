@@ -126,6 +126,10 @@ module Erbse
       end
     end
 
+
+    # FIXME: where's this needed.
+    attr_reader :src
+
   end
 
 
@@ -133,7 +137,6 @@ module Erbse
   ## engine for Ruby
   ##
   class Eruby < Basic::Engine
-    include RubyEvaluator
     include RubyGenerator
   end
 

@@ -1,11 +1,7 @@
-require 'erbse/evaluator'
 require 'erbse/context'
 
 
 module Erbse
-
-
-  ##
   ## (abstract) abstract engine class.
   ## subclass must include evaluator and converter module.
   ##
@@ -14,7 +10,6 @@ module Erbse
       #@input = input
       init_generator(properties)
       init_converter(properties)
-      init_evaluator(properties)
       @src    = convert(input) if input
     end
 
@@ -98,7 +93,6 @@ module Erbse
   end
 
   class Basic::Engine < Engine
-    include Evaluator
     include Basic::Converter
   end
 

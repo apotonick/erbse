@@ -48,6 +48,5 @@ require "erbse/converter"
 
 require "erbse/engine"
 require "erbse/enhancer"
-require "erbse/evaluator"
 
 require "erbse/engine/eruby"
