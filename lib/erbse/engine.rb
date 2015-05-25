@@ -6,6 +6,8 @@ module Erbse
   ## subclass must include evaluator and converter module.
   ##
   class Engine
+    include Basic::Converter
+
     def initialize(input=nil, properties={})
       #@input = input
       init_generator(properties)
@@ -19,33 +21,6 @@ module Erbse
     ##
     def convert!(input)
       @src = convert(input)
-    end
-
-
-    # FIXME: this caching is redundant as we got that in Tilt AND cells.
-    ##
-    ## load file, write cache file, and return engine object.
-    ## this method create code cache file automatically.
-    ## cachefile name can be specified with properties[:cachename],
-    ## or filname + 'cache' is used as default.
-    ##
-    def self.load_file(filename, properties={})
-      cachename = properties[:cachename] || (filename + '.cache')
-      properties[:filename] = filename
-      timestamp = File.mtime(filename)
-      if test(?f, cachename) && timestamp == File.mtime(cachename)
-        engine = self.new(nil, properties)
-        engine.src = File.read(cachename)
-      else
-        input = File.open(filename, 'rb') {|f| f.read }
-        engine = self.new(input, properties)
-        tmpname = cachename + rand().to_s[1,8]
-        File.open(tmpname, 'wb') {|f| f.write(engine.src) }
-        File.rename(tmpname, cachename)
-        File.utime(timestamp, timestamp, cachename)
-      end
-      engine.src.untaint   # ok?
-      return engine
     end
 
 
@@ -80,20 +55,5 @@ module Erbse
     end
 
 
-  end  # end of class Engine
-
-
-  ##
-  ## (abstract) base engine class for Eruby, Eperl, Ejava, and so on.
-  ## subclass must include generator.
-  ##
-
-  module Basic
-
   end
-
-  class Basic::Engine < Engine
-    include Basic::Converter
-  end
-
 end

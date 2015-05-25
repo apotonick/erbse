@@ -111,8 +111,6 @@ module Erbse
       src << '@output_buffer.to_s'
     end
 
-
-
     def flush_newline_if_pending(src)
       if @newline_pending > 0
         src << "@output_buffer.safe_append='#{"\n" * @newline_pending}'.freeze;"
@@ -121,7 +119,7 @@ module Erbse
     end
 
 
-    # FIXME: where's this needed.
+    # FIXME: where's this needed?
     attr_reader :src
 
   end
@@ -130,7 +128,7 @@ module Erbse
   ##
   ## engine for Ruby
   ##
-  class Eruby < Basic::Engine
+  class Eruby < Engine
     include RubyGenerator
   end
 end
