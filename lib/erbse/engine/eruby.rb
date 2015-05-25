@@ -1,12 +1,5 @@
 module Erbse
   class RubyGenerator
-    def initialize(src)
-      # @src = src
-    end
-
-    # FIXME: where's this needed? PRIVATE!
-    # attr_reader :src
-
     def init_generator(properties={})
       @escapefunc ||= "Erubis::XmlHelper.escape_xml"
     end
