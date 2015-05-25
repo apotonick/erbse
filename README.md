@@ -9,6 +9,9 @@ _An updated version of Erubis._
 * block support a la Rails.
 
 
+
+* Always get template file content as string. The outer template abstraction layer, like Tilt, has to take care of caching the Erbse Template instances.
+
 == About Erubis
 
 Erubis is an implementation of eRuby. It has the following features.

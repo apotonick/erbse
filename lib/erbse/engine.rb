@@ -6,14 +6,13 @@ module Erbse
   ## subclass must include evaluator and converter module.
   ##
   class Engine
-    include Basic::Converter
-
-    def initialize(input=nil, properties={})
-      #@input = input
-      init_generator(properties)
-      init_converter(properties)
-      @src    = convert(input) if input
+    def initialize(input, properties={})
+      generator = RubyGenerator.new(nil)
+      converter = Basic::Converter.new(properties, generator)
+      @src       = converter.convert(input)
     end
+
+    attr_reader :src # TODO: rename to #call.
 
 
     ##
@@ -24,6 +23,7 @@ module Erbse
     end
 
 
+    # TODO: remove methods below here!
     ##
     ## helper method to convert and evaluate input text with context object.
     ## context may be Binding, Hash, or Object.
@@ -55,5 +55,10 @@ module Erbse
     end
 
 
+  end
+
+
+  class Eruby < Engine
+    # include RubyGenerator
   end
 end

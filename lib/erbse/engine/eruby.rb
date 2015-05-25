@@ -1,12 +1,14 @@
 module Erbse
-  module RubyGenerator
-    def init_generator(properties={})
-      @escapefunc ||= "Erubis::XmlHelper.escape_xml"
-      @bufvar     = properties[:bufvar] || "_buf"
+  class RubyGenerator
+    def initialize(src)
+      # @src = src
     end
 
-    def self.supported_properties()  # :nodoc:
-      return []
+    # FIXME: where's this needed? PRIVATE!
+    # attr_reader :src
+
+    def init_generator(properties={})
+      @escapefunc ||= "Erubis::XmlHelper.escape_xml"
     end
 
     def escape_text(text)
@@ -23,7 +25,6 @@ module Erbse
     #end
     #++
     def add_preamble(src)
-      puts "add_preamble called§§§§§§§§§§"
       @newline_pending = 0
       src << "@output_buffer = output_buffer;" # DISCUSS: i removed the output_buffer || ActionView::OB.new rubbish here.
     end
@@ -48,14 +49,14 @@ module Erbse
 
     # Erubis toggles <%= and <%== behavior when escaping is enabled.
     # We override to always treat <%== as escaped.
-    def add_expr(src, code, indicator)
-      case indicator
-      when '=='
-        add_expr_escaped(src, code)
-      else
-        super
-      end
-    end
+    # def add_expr(src, code, indicator)
+    #   case indicator
+    #   when '=='
+    #     add_expr_escaped(src, code)
+    #   else
+    #     super
+    #   end
+    # end
 
     def ____add_stmt(src, code)
       #src << code << ';'
@@ -117,18 +118,5 @@ module Erbse
         @newline_pending = 0
       end
     end
-
-
-    # FIXME: where's this needed?
-    attr_reader :src
-
-  end
-
-
-  ##
-  ## engine for Ruby
-  ##
-  class Eruby < Engine
-    include RubyGenerator
   end
 end
