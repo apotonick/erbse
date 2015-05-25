@@ -52,7 +52,6 @@ module Erbse
     # end
 
     def ____add_stmt(src, code)
-      #src << code << ';'
       src << code
       src << ';' unless code[-1] == ?\n
     end

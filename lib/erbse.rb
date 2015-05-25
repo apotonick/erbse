@@ -46,6 +46,6 @@ end
 
 require "erbse/converter"
 
-require "erbse/engine"
+require "erbse/template"
 
-require "erbse/engine/eruby"
+require "erbse/eruby"

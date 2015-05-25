@@ -73,6 +73,9 @@ module Erbse
              ]
     end
 
+
+  private
+
     attr_accessor :pattern, :trim
 
     def init_converter!(properties={})
@@ -81,7 +84,7 @@ module Erbse
       @trim    = properties[:trim] != false
     end
 
-    protected
+
 
     ## return regexp of pattern to parse eRuby script
     def self.pattern_regexp(pattern)
@@ -90,8 +93,6 @@ module Erbse
     end
 
     DEFAULT_REGEXP = pattern_regexp('<% %>')
-
-    # public
 
     def convert_input(src, input)
       pat = @pattern
