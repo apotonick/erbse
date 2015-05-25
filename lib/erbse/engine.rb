@@ -1,5 +1,3 @@
-require 'erbse/generator'
-require 'erbse/converter'
 require 'erbse/evaluator'
 require 'erbse/context'
 
@@ -12,10 +10,6 @@ module Erbse
   ## subclass must include evaluator and converter module.
   ##
   class Engine
-    #include Evaluator
-    #include Converter
-    #include Generator
-
     def initialize(input=nil, properties={})
       #@input = input
       init_generator(properties)
@@ -33,6 +27,7 @@ module Erbse
     end
 
 
+    # FIXME: this caching is redundant as we got that in Tilt AND cells.
     ##
     ## load file, write cache file, and return engine object.
     ## this method create code cache file automatically.
@@ -105,15 +100,6 @@ module Erbse
   class Basic::Engine < Engine
     include Evaluator
     include Basic::Converter
-    include Generator
   end
-
-
-  class PI::Engine < Engine
-    include Evaluator
-    include PI::Converter
-    include Generator
-  end
-
 
 end

@@ -1,11 +1,5 @@
-require 'erubis/util'
-
 module Erbse
-
-
-  ##
-  ## convert
-  ##
+  # convert input string into target language
   module Converter
 
     attr_accessor :preamble, :postamble, :escape
@@ -24,7 +18,6 @@ module Erbse
       @escape    = properties[:escape]
     end
 
-    ## convert input string into target language
     def convert(input)
       codebuf = ""    # or []
       @preamble.nil? ? add_preamble(codebuf) : (@preamble && (codebuf << @preamble))
@@ -84,7 +77,7 @@ module Erbse
   ## basic converter which supports '<% ... %>' notation.
   ##
   module Basic::Converter
-    include Erubis::Converter
+    include Erbse::Converter
 
     def self.supported_properties    # :nodoc:
       return [
@@ -190,7 +183,7 @@ module Erbse
   ## this class converts '<?rb ... ?>' and '${...}' notation.
   ##
   module PI::Converter
-    include Erubis::Converter
+    include Erbse::Converter
 
     def self.desc   # :nodoc:
       "use processing instructions (PI) instead of '<% %>'"

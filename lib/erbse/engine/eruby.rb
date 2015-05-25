@@ -3,12 +3,10 @@ require 'erbse/enhancer'
 
 module Erbse
   module RubyGenerator
-    include Generator
     #include ArrayBufferEnhancer
     include StringBufferEnhancer
 
     def init_generator(properties={})
-      super
       @escapefunc ||= "Erubis::XmlHelper.escape_xml"
       @bufvar     = properties[:bufvar] || "_buf"
     end

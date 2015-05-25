@@ -44,12 +44,10 @@
 module Erbse
 end
 
-require "erbse/engine"
-# require "erbse/helper"
-require "erbse/enhancer"
-require "erbse/engine/eruby"
-require "erbse/generator"
-require "erbse/evaluator"
 require "erbse/converter"
 
-# require "erbse/local-setting"
+require "erbse/engine"
+require "erbse/enhancer"
+require "erbse/evaluator"
+
+require "erbse/engine/eruby"
