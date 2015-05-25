@@ -2,44 +2,31 @@
 
 _An updated version of Erubis._
 
-
+Erbse is completely decoupled from any framework and does only know how to compile ERB.
 
 ## Added features
 
-* block support a la Rails.
+* Block support a la Rails.
 
+  ```erb
+  <%= form_tag .. do |f| %>
+    <%= f.fields_for do %>
+     ...
+    <% end %>
+  <% end %>
+  ```
 
+## API
 
-* Always get template file content as string. The outer template abstraction layer, like Tilt, has to take care of caching the Erbse Template instances.
+The API is extremely simple.
 
-== About Erubis
+```ruby
+Erbse::Template.new("<% ... %>").call #=> string of compiled ruby.
+```
 
-Erubis is an implementation of eRuby. It has the following features.
-* Very fast, almost three times faster than ERB and even 10% faster than eruby
-* Multi-language support (Ruby/PHP/C/Java/Scheme/Perl/Javascript)
-* Auto escaping support
-* Auto trimming spaces around '<% %>'
-* Embedded pattern changeable (default '<% %>')
-* Enable to handle Processing Instructions (PI) as embedded pattern (ex. '<?rb ... ?>')
-* Context object available and easy to combine eRuby template with YAML datafile
-* Print statement available
-* Easy to extend and customize in subclass
-* Ruby on Rails support
+Template only accepts a content string which is the ERB template. The only public `#call` method returns a string of the compiled template that can then be evaluated in a context.
 
-Erubis is implemented in pure Ruby.  It requires Ruby 1.8 or higher.
-Erubis now supports Ruby 1.9.
-
-See doc/users-guide.html for details.
-
-
-
-
-
-== Benchmark
-
-'benchmark/erubybenchmark.rb' is a benchmark script of Erubis.
-Try 'ruby erubybenchmark.rb' in benchmark directory.
-
+The user layer, like Tilt, has to take care of caching the `Erbse::Template` instances.
 
 
 # License
