@@ -29,6 +29,30 @@ Template only accepts a content string which is the ERB template. The only publi
 The user layer, like Tilt, has to take care of caching the `Erbse::Template` instances.
 
 
+## Planned
+
+Block inheritance.
+
+```erb
+<h1><%= title %></h1>
+
+<% fragment :subheader do %>
+  Or: <%= subheader %>
+<% end %>
+```
+
+This fragment could then be overridden.
+
+Feel free to contribute!!!
+
+
+## Used where?
+
+Erbse is the ERB engine in [Cells 4](https://github.com/apotonick/cells).
+
+It also hopefully gets used in Rails 5/6, so we can remove those horrible hacks from AV.
+
+
 # License
 
 MIT License
