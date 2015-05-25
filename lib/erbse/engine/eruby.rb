@@ -1,11 +1,5 @@
-require 'erbse/enhancer'
-
-
 module Erbse
   module RubyGenerator
-    #include ArrayBufferEnhancer
-    include StringBufferEnhancer
-
     def init_generator(properties={})
       @escapefunc ||= "Erubis::XmlHelper.escape_xml"
       @bufvar     = properties[:bufvar] || "_buf"
@@ -139,21 +133,4 @@ module Erbse
   class Eruby < Basic::Engine
     include RubyGenerator
   end
-
-
-  ##
-  ## fast engine for Ruby
-  ##
-  class FastEruby < Eruby
-    include InterpolationEnhancer
-  end
-
-
-  ##
-  ## swtich '<%= %>' to escaped and '<%== %>' to not escaped
-  ##
-  class EscapedEruby < Eruby
-    include EscapeEnhancer
-  end
-
 end
