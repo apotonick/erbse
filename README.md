@@ -2,7 +2,7 @@
 
 _An updated version of Erubis._
 
-Erbse is completely decoupled from any framework and does only know how to compile ERB.
+Erbse compiles an ERB string to a string of Ruby. It is completely decoupled from any framework and does only one thing. Pretty boring, I know.
 
 ## Added features
 
@@ -41,5 +41,5 @@ MIT License
 
 # Authors
 
-Copyright 2015 Nick Sutterer <apotonick@gmail.com>
-Copyright 2006-2011 makoto kuwata <kwa(at)kuwata-lab.com>
+* Copyright 2015 Nick Sutterer <apotonick@gmail.com>
+* Copyright 2006-2011 makoto kuwata <kwa(at)kuwata-lab.com>
