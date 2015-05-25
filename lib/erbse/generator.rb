@@ -1,11 +1,4 @@
-##
-## $Release: 2.7.0 $
-## copyright(c) 2006-2011 kuwata-lab.com all rights reserved.
-##
-
-require 'erubis/util'
-
-module Erubis
+module Erbse
 
 
   ##

@@ -97,6 +97,11 @@ module Erbse
   ## (abstract) base engine class for Eruby, Eperl, Ejava, and so on.
   ## subclass must include generator.
   ##
+
+  module Basic
+
+  end
+
   class Basic::Engine < Engine
     include Evaluator
     include Basic::Converter

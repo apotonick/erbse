@@ -5,13 +5,13 @@ require 'erbse/version'
 
 Gem::Specification.new do |spec|
   spec.name        = "erbse"
-  spec.version     = Erbse::VERSION::STRING
+  spec.version     = Erbse::VERSION
   spec.platform    = Gem::Platform::RUBY
   spec.authors     = ["Nick Sutterer"]
   spec.email       = ["apotonick@gmail.com"]
   spec.homepage    = "https://github.com/apotonick/erbse"
   spec.summary     = %q{Updated Erubis.}
-  spec.description = %q{An updated Erubis with block support..}
+  spec.description = %q{An updated Erubis with block support. Block inheritance soon to come.}
   spec.license     = 'MIT'
 
   spec.files         = `git ls-files`.split("\n")

@@ -7,7 +7,7 @@ require 'erubis/error'
 require 'erubis/context'
 
 
-module Erubis
+module Erbse
 
   EMPTY_BINDING = binding()
 
