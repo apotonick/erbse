@@ -6,7 +6,7 @@ Erbse compiles an ERB string to a string of Ruby. It is completely decoupled fro
 
 ## Added features
 
-* Block support a la Rails.
+* Block support à la Rails.
 
   ```erb
   <%= form_tag .. do |f| %>
