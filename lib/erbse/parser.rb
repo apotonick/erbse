@@ -11,7 +11,6 @@ module Erbse
       @preamble.nil? ? generator.add_preamble(codebuf) : (@preamble && (codebuf << @preamble))
       convert_input(codebuf, input)
       @postamble.nil? ? generator.add_postamble(codebuf) : (@postamble && (codebuf << @postamble))
-      @_proc = nil    # clear cached proc object
       return codebuf  # or codebuf.join()
     end
 
@@ -146,11 +145,9 @@ module Erbse
     def add_expr(src, code, indicator)
       case indicator
       when '='
-        @escape ? generator.add_expr_escaped(src, code) : generator.add_expr_literal(src, code)
+        generator.add_expr_literal(src, code, indicator)
       when '=='
-        @escape ? generator.add_expr_literal(src, code) : generator.add_expr_escaped(src, code)
-      when '==='
-        generator.add_expr_debug(src, code)
+        generator.add_expr_literal(src, code, indicator)
       end
     end
   end
