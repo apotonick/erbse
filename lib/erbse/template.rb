@@ -4,7 +4,7 @@ module Erbse
     def initialize(input, properties={})
       generator = RubyGenerator.new
       converter = Basic::Converter.new(properties, generator)
-      @src      = converter.convert(input)
+      @src      = converter.call(input)
     end
 
     def call

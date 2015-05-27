@@ -1,12 +1,12 @@
 module Erbse
-  # Convert input ERB string into Ruby.
+  # Convert input ERB string into Ruby by calling methods on a generator for particular input events (e.g. <%).
   class Converter
     def initialize(properties={}, generator)
       init_converter!(properties)
       @generator = generator
     end
 
-    def convert(input) # TODO: rename to #call.
+    def call(input)
       codebuf = ""    # or []
       @preamble.nil? ? generator.add_preamble(codebuf) : (@preamble && (codebuf << @preamble))
       convert_input(codebuf, input)
