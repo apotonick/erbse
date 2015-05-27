@@ -1,4 +1,5 @@
 module Erbse
+  # Gets called by the converter for patterns.
   class RubyGenerator
     def init_generator(properties={})
       @escapefunc ||= "Erubis::XmlHelper.escape_xml"

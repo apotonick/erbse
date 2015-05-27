@@ -1,5 +1,5 @@
 module Erbse
-  # convert input string into target language
+  # Convert input ERB string into Ruby.
   class Converter
     def initialize(properties={}, generator)
       init_converter!(properties)
