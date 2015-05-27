@@ -29,11 +29,13 @@ require 'ruby-prof'
  precompiled =  '"Yeah
    #{outer = "Outer"; nil}
    #{res = capture do
-     "Inside.
-     #{outer}
-     #{method_call}
-     *#{res2 = capture do "between stars" end;nil}*
-     Still Inside. *#{res2}*"
+     "
+      Inside.
+      #{outer}
+      #{method_call}
+      *#{res2 = capture do "between stars" end;nil}*
+      Still Inside. *#{res2}*
+    "
    end;nil } >cap; #{res} "'
 
 
