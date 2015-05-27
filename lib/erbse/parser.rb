@@ -1,12 +1,12 @@
 module Erbse
   # Convert input ERB string into Ruby.
-  class Converter
+  class Parser
     def initialize(properties={}, generator)
       init_converter!(properties)
       @generator = generator
     end
 
-    def convert(input) # TODO: rename to #call.
+    def call(input)
       codebuf = ""    # or []
       @preamble.nil? ? generator.add_preamble(codebuf) : (@preamble && (codebuf << @preamble))
       convert_input(codebuf, input)
@@ -65,7 +65,7 @@ module Erbse
   ##
   ## basic converter which supports '<% ... %>' notation.
   ##
-  class Basic::Converter < Converter
+  class Basic::Parser < Parser
     def self.supported_properties    # :nodoc:
       return [
               [:pattern,  '<% %>', "embed pattern"],

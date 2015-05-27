@@ -3,8 +3,8 @@ module Erbse
   class Template
     def initialize(input, properties={})
       generator = RubyGenerator.new
-      converter = Basic::Converter.new(properties, generator)
-      @src      = converter.convert(input)
+      parser    = Basic::Parser.new(properties, generator)
+      @src      = parser.call(input)
     end
 
     def call

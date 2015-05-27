@@ -44,6 +44,6 @@
 module Erbse
 end
 
-require "erbse/converter"
+require "erbse/parser"
 require "erbse/template"
 require "erbse/eruby"
