@@ -48,7 +48,7 @@ Feel free to contribute!!!
 
 ## Used where?
 
-Erbse is the ERB engine in [Cells 4](https://github.com/apotonick/cells).
+Erbse is the ERB engine in [Cells 4](https://github.com/apotonick/cells) in combination with Tilt..
 
 It also hopefully gets used in Rails 5/6, so we can remove those horrible hacks from AV.
 
@@ -59,6 +59,7 @@ MIT License
 
 # Contributors
 
+* Special thanks to [Aman Gupta](https://github.com/tmm1) for [performance tweaks](https://github.com/rails/rails/pull/9555) that are merged in Erbse.
 * @iazel
 * @seuros
 
