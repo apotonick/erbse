@@ -112,8 +112,7 @@ module Erbse
           generator.add_text(src, lspace, "ob_#{buffers.size}") if lspace
 
           top_buffer = buffers.size
-          buffers << 1
-          generator.add_expr_literal(src, code, indicator, "ob_#{top_buffer}", buffers.size)
+          generator.add_expr_literal(src, code, indicator, "ob_#{top_buffer}", buffers)
 
           generator.add_text(src, rspace, "ob_#{buffers.size}") if rspace
         elsif ch == ?\#          # <%# %>
@@ -133,7 +132,7 @@ module Erbse
             generator.add_text(src, lspace, "ob_#{buffers.size}") if lspace
             if code == " end "
               # src << "ob_#{buffers.size - 2} << ob_#{buffers.size-1};"
-              src << "ob_#{buffers.size - 1};"
+              src << "ob_#{buffers.size };"
               buffers.pop
 
             end

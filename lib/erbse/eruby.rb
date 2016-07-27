@@ -47,10 +47,14 @@ module Erbse
     BLOCK_EXPR = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
 
     # <%= .. [do] >
-    def add_expr_literal(src, code, indicator, buffer_name, buffer_i)
+    def add_expr_literal(src, code, indicator, buffer_name, buffers)
       flush_newline_if_pending(src)
       if code =~ BLOCK_EXPR
+                  buffers << 1
         src << ";#{buffer_name}= " << code
+
+        buffer_i = buffers.size
+
 
         src << "; ob_#{buffer_i}='';"
       else
