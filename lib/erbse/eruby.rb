@@ -65,7 +65,7 @@ module Erbse
 
     def flush_newline_if_pending(src)
       if @newline_pending > 0
-        src << "@output_buffer.safe_append='#{"\n" * @newline_pending}'.freeze;"
+        #src << "@output_buffer.safe_append='#{"\n" * @newline_pending}'.freeze;"
         @newline_pending = 0
       end
     end
