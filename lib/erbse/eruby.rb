@@ -13,18 +13,20 @@ module Erbse
       return "#{@escapefunc}(#{code})"
     end
 
-    def add_preamble(src)
+    def add_preamble(src, buffer_name)
       @newline_pending = 0
-      src << "@output_buffer = output_buffer;" # DISCUSS: i removed the output_buffer || ActionView::OB.new rubbish here.
+      # src << "@output_buffer = output_buffer;" # DISCUSS: i removed the output_buffer || ActionView::OB.new rubbish here.
+      src << "#{buffer_name} = '';"
     end
 
-    def add_text(src, text)
+    def add_text(src, text, buffer_name)
       return if text.empty?
 
       if text == "\n"
         @newline_pending += 1
       else
-        src << "@output_buffer.safe_append='"
+        # src << "@output_buffer.safe_append='"
+        src << "#{buffer_name} << '"
         src << "\n" * @newline_pending if @newline_pending > 0
         src << escape_text(text)
         src << "'.freeze;"
@@ -35,7 +37,7 @@ module Erbse
 
     # if, method do, and so on, assignments
     # <% .. >
-    def add_stmt(src, code)
+    def add_stmt(src, code, buffer_name)
       flush_newline_if_pending(src)
 
       src << code
@@ -45,18 +47,20 @@ module Erbse
     BLOCK_EXPR = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
 
     # <%= .. [do] >
-    def add_expr_literal(src, code, indicator)
+    def add_expr_literal(src, code, indicator, buffer_name, buffer_i)
       flush_newline_if_pending(src)
       if code =~ BLOCK_EXPR
-        src << '@output_buffer.append= ' << code
+        src << ";#{buffer_name}= " << code
+
+        src << "; ob_#{buffer_i}='';"
       else
-        src << '@output_buffer.append=(' << code << ').to_s;'
+        src << ";#{buffer_name}<< (" << code << ').to_s;'
       end
     end
 
-    def add_postamble(src)
+    def add_postamble(src, buffer_name)
       flush_newline_if_pending(src)
-      src << '@output_buffer.to_s'
+      src << "#{buffer_name}.to_s"
     end
 
     def flush_newline_if_pending(src)

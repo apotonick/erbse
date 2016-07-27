@@ -11,7 +11,11 @@ class ErbseTest < MiniTest::Spec
   it do
     Erbse::Template.new(%{<%= form_for do %><%= content_tag :div do %>DIV<% end %><% end %>}).call.must_equal "@output_buffer = output_buffer;@output_buffer.append=  form_for do @output_buffer.append=  content_tag :div do @output_buffer.safe_append='DIV'.freeze; end ; end ;@output_buffer.to_s"
   end
+  it "what" do
+    Erbse::Template.new(%{<%= form_for do %><%= 1 %><% end %>}).call.must_equal %{}
+  end
 
+  # <%= f.input %>
   it "calls (block).to_s" do
     Erbse::Template.new(%{<%= f.input %>}).call.must_equal %{@output_buffer = output_buffer;@output_buffer.append=( f.input ).to_s;@output_buffer.to_s}
   end

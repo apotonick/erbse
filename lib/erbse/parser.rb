@@ -8,9 +8,9 @@ module Erbse
 
     def call(input)
       codebuf = ""    # or []
-      @preamble.nil? ? generator.add_preamble(codebuf) : (@preamble && (codebuf << @preamble))
+      @preamble.nil? ? generator.add_preamble(codebuf, "ob_0") : (@preamble && (codebuf << @preamble))
       convert_input(codebuf, input)
-      @postamble.nil? ? generator.add_postamble(codebuf) : (@postamble && (codebuf << @postamble))
+      @postamble.nil? ? generator.add_postamble(codebuf, "ob_0") : (@postamble && (codebuf << @postamble))
       return codebuf  # or codebuf.join()
     end
 
@@ -90,6 +90,9 @@ module Erbse
       regexp = pat.nil? || pat == '<% %>' ? DEFAULT_REGEXP : pattern_regexp(pat)
       pos = 0
       is_bol = true     # is beginning of line
+
+      buffers = []
+
       input.scan(regexp) do |indicator, code, tailch, rspace|
         match = Regexp.last_match()
         len  = match.begin(0) - pos
@@ -98,41 +101,54 @@ module Erbse
         ch   = indicator ? indicator[0] : nil
         lspace = ch == ?= ? nil : detect_spaces_at_bol(text, is_bol)
         is_bol = rspace ? true : false
-        generator.add_text(src, text) if text && !text.empty?
+        generator.add_text(src, text, "ob_#{buffers.size}") if text && !text.empty?
         ## * when '<%= %>', do nothing
         ## * when '<% %>' or '<%# %>', delete spaces iff only spaces are around '<% %>'
-        if ch == ?=              # <%= %>
+        if ch == ?=                                                                             # <%= %>
+
+          puts "block begin #{buffers.size}"
+
           rspace = nil if tailch && !tailch.empty?
-          generator.add_text(src, lspace) if lspace
-          add_expr(src, code, indicator)
-          generator.add_text(src, rspace) if rspace
+          generator.add_text(src, lspace, "ob_#{buffers.size}") if lspace
+
+          top_buffer = buffers.size
+          buffers << 1
+          generator.add_expr_literal(src, code, indicator, "ob_#{top_buffer}", buffers.size)
+
+          generator.add_text(src, rspace, "ob_#{buffers.size}") if rspace
         elsif ch == ?\#          # <%# %>
           n = code.count("\n") + (rspace ? 1 : 0)
           if @trim && lspace && rspace
-            generator.add_stmt(src, "\n" * n)
+            generator.add_stmt(src, "\n" * n, "ob_#{buffers.size}")
           else
-            generator.add_text(src, lspace) if lspace
-            generator.add_stmt(src, "\n" * n)
-            generator.add_text(src, rspace) if rspace
+            generator.add_text(src, lspace, "ob_#{buffers.size}") if lspace
+            generator.add_stmt(src, "\n" * n, "ob_#{buffers.size}")
+            generator.add_text(src, rspace, "ob_#{buffers.size}") if rspace
           end
-        else                     # <% %>
+        else                                                                                    # <% %>
           if @trim && lspace && rspace
-            generator.add_stmt(src, "#{lspace}#{code}#{rspace}")
+
+            generator.add_stmt(src, "#{lspace}#{code}#{rspace}", "ob_#{buffers.size}")
           else
-            generator.add_text(src, lspace) if lspace
-            generator.add_stmt(src, code)
-            generator.add_text(src, rspace) if rspace
+            generator.add_text(src, lspace, "ob_#{buffers.size}") if lspace
+            if code == " end "
+              src << "ob_#{buffers.size - 2} << ob_#{buffers.size-1};"
+              buffers.pop
+
+            end
+            generator.add_stmt(src, code, "ob_#{buffers.size}")
+            generator.add_text(src, rspace, "ob_#{buffers.size}") if rspace
           end
+
+          puts "@@@@@ #{code.inspect}"
+
+
+          puts "block begin #{code} #{buffers.size}"
         end
       end
       #rest = $' || input                        # ruby1.8
       rest = pos == 0 ? input : input[pos..-1]   # ruby1.9
-      generator.add_text(src, rest)
-    end
-
-    ## add expression code to src
-    def add_expr(src, code, indicator)
-      generator.add_expr_literal(src, code, indicator)
+      generator.add_text(src, rest, "ob_#{buffers.size}")
     end
   end
 end
