@@ -50,7 +50,7 @@ module Erbse
       if code =~ BLOCK_EXPR
         src << '@output_buffer.append= ' << code
       else
-        src << '@output_buffer.append=(' << code << ');'
+        src << '@output_buffer.append=(' << code << ').to_s;'
       end
     end
 
