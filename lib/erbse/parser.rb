@@ -132,7 +132,8 @@ module Erbse
           else
             generator.add_text(src, lspace, "ob_#{buffers.size}") if lspace
             if code == " end "
-              src << "ob_#{buffers.size - 2} << ob_#{buffers.size-1};"
+              # src << "ob_#{buffers.size - 2} << ob_#{buffers.size-1};"
+              src << "ob_#{buffers.size - 1};"
               buffers.pop
 
             end
