@@ -123,9 +123,6 @@ module Erbse
             generator.add_stmt(src, "\n" * n)
             generator.add_text(src, rspace) if rspace
           end
-        elsif ch == ?%           # <%% %>
-          s = "#{lspace}#{@prefix||='<%'}#{code}#{tailch}#{@postfix||='%>'}#{rspace}"
-          generator.add_text(src, s)
         else                     # <% %>
           if @trim && lspace && rspace
             generator.add_stmt(src, "#{lspace}#{code}#{rspace}")
@@ -143,12 +140,7 @@ module Erbse
 
     ## add expression code to src
     def add_expr(src, code, indicator)
-      case indicator
-      when '='
-        generator.add_expr_literal(src, code, indicator)
-      when '=='
-        generator.add_expr_literal(src, code, indicator)
-      end
+      generator.add_expr_literal(src, code, indicator)
     end
   end
 end
