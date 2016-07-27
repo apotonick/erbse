@@ -65,14 +65,6 @@ module Erbse
   ## basic converter which supports '<% ... %>' notation.
   ##
   class Basic::Parser < Parser
-    def self.supported_properties    # :nodoc:
-      return [
-              [:pattern,  '<% %>', "embed pattern"],
-              [:trim,      true,   "trim spaces around <% ... %>"],
-             ]
-    end
-
-
   private
 
     attr_accessor :pattern, :trim
