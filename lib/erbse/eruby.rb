@@ -50,15 +50,17 @@ module Erbse
     def add_expr_literal(src, code, indicator, buffer_name, buffers)
       flush_newline_if_pending(src)
       if code =~ BLOCK_EXPR
+        puts "@@@@@ code block #{code.inspect}"
+                  puts "     #{buffers.size}"
+                    buffer_i = buffers.size
+        src << ";ob_#{buffers.size} << " << code
                   buffers << 1
-        src << ";#{buffer_name}= " << code
-
-        buffer_i = buffers.size
 
 
-        src << "; ob_#{buffer_i}='';"
+
+        src << "; ob_#{buffers.size}='';"
       else
-        src << ";#{buffer_name}<< (" << code << ').to_s;'
+        src << ";ob_#{buffers.size}<< (" << code << ').to_s;'
       end
     end
 
