@@ -10,15 +10,16 @@ class Parser
   BLOCK_EXPR = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
 
   def call(str)
-    regexp = DEFAULT_REGEXP
     pos = 0
     is_bol = true     # is beginning of line
 
     buffers = []
     result = [:multi]
-    last_block = nil
+    buffers << result
 
-    str.scan(regexp) do |indicator, code, tailch, rspace|
+    index = 0
+
+    str.scan(DEFAULT_REGEXP) do |indicator, code, tailch, rspace|
       match = Regexp.last_match()
       len  = match.begin(0) - pos
       text = str[pos, len]
@@ -27,20 +28,20 @@ class Parser
       lspace = ch == ?= ? nil : detect_spaces_at_bol(text, is_bol)
       is_bol = rspace ? true : false
 
-      puts "@@@@@ #{code.inspect}"
+      result = buffers.last
+      # puts "parsing #{code} to #{result.inspect}"
 
       if ch == ?= # <%= %>
         if code =~ BLOCK_EXPR
-          result << [:block, code, block = [:multi]]
-          last_block = result
-          result = block
+          buffers.last << [:block, index += 1, index += 1, code, block = [:multi]]
+          buffers << block
         else
-          result << [:code, code]
+          buffers.last << [:code, code]
         end
       end
 
       if code =~ / end /
-        result = last_block
+        block = buffers.pop
       end
 
 
@@ -59,7 +60,7 @@ class Parser
 
     end
 
-    result
+    buffers.last
   end
 
   def detect_spaces_at_bol(text, is_bol)
@@ -91,9 +92,36 @@ class Parser
 end
 
 
-str = %{<%= true %> <%= form_for do %><%= 1 %><%= 2 %><% end %>}
+str = %{
+<%= true %>
+<%= form_for do %><%= 1 %><%= 2 %>
+  <%= nested do %>
+    <%= this %>
+  <% end %>
+<% end %>}.gsub("\n","")
 
 puts Parser.new.(str).inspect
+
+
+
+
+
+
+describe "AST" do
+  let (:str) { %{
+<%= true %>
+<%= form_for do %><%= 1 %><%= 2 %>
+  <%= nested do %>
+    <%= this %>
+  <% end %>
+<% end %>}.gsub("\n","")
+}
+
+  it "what" do
+    Parser.new.(str).must_equal [:multi, [:code, " true "], [:block, 1, 2, " form_for do ", [:multi, [:code, " 1 "], [:code, " 2 "], [:block, 3, 4, " nested do ", [:multi, [:code, " this "]]]]]]
+  end
+end
+
 exit
 
 ast=
