@@ -102,9 +102,33 @@ str = %{
 
 puts Parser.new.(str).inspect
 
+first = Parser.new.(str)
+
+require "temple"
+class Filter < Temple::Filter
+  define_options :key
+
+  def on_block(arg)
+    raise arg
+  end
+end
+
+class SimpleFilter < Temple::Filter
+  define_options :key
+
+  def on_code(*args)
+
+    [:on_test, args]
+  end
+end
+
+puts first.inspect
+# puts Filter.new.call(first)
+res = SimpleFilter.new.call([:multi, [:code, 1], [:code, 2]])
+puts res.inspect
 
 
-
+#ob_0 = '';;ob_0<< ( true ).to_s;ob_0 << ' '.freeze;;ob_1 =  form_for do ; ob_2='';;ob_2<< ( 1 ).to_s;;ob_2<< ( 2 ).to_s;;ob_3 =  nested do ; ob_4='';;ob_4<< ( 3 ).to_s;;ob_4<< ( 4 ).to_s;ob_4; end ;ob_2 << ob_3;ob_3; end ;ob_1 << ob_2;ob_0.to_s
 
 
 describe "AST" do
@@ -122,7 +146,7 @@ describe "AST" do
   end
 end
 
-exit
+# exit
 
 ast=
 [:multi,
@@ -136,7 +160,19 @@ ast=
 
 require "temple"
 
-past = Temple::Filters::ControlFlow.new(ast)
+past = Temple::Filters::ControlFlow.new().call([:block, 'loop do',
+      [:static, 'Hello']])
 puts past.inspect
 
-puts Temple::Generators::ArrayBuffer.new.(ast)
+past = [:multi, [:code, "loop do"], [:static, "Hello"], [:code, "end"]]
+
+past = [:multi, [:capture, "ob_1", [:multi, [:code, "loop do"], [:static, "Hello"], [:code, "end"]]]]
+# _buf = []; ob_1 = ''; loop do; ob_1 << ("Hello".freeze); end; ob_1; _buf = _buf.join("".freeze)
+
+past = [:multi, [:block, "ob_1 = "+"loop do", [:capture, "ob_2", [:multi, [:static, "Hello"]]]], [:dynamic, "ob_1"]]
+past = Temple::Filters::ControlFlow.new().call(past)
+
+puts Temple::Generators::ArrayBuffer.new.(past)
+
+
+# core abstraction: multi, static, dynamic, code, newline and capture
