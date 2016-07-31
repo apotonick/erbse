@@ -9,6 +9,9 @@ class Parser
   DEFAULT_REGEXP = pattern_regexp('<% %>')
   BLOCK_EXPR = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
 
+  def initialize(*)
+  end
+
   def call(str)
     pos = 0
     is_bol = true     # is beginning of line
@@ -33,7 +36,7 @@ class Parser
 
       if ch == ?= # <%= %>
         if code =~ BLOCK_EXPR
-          buffers.last << [:block, index += 1, index += 1, code, block = [:multi]]
+          buffers.last << [:erb, :block, index += 1, index += 1, code, block = [:multi]]
           buffers << block
         else
           buffers.last << [:code, code]
@@ -142,7 +145,13 @@ describe "AST" do
 }
 
   it "what" do
-    Parser.new.(str).must_equal [:multi, [:code, " true "], [:block, 1, 2, " form_for do ", [:multi, [:code, " 1 "], [:code, " 2 "], [:block, 3, 4, " nested do ", [:multi, [:code, " this "]]]]]]
+    Parser.new.(str).must_equal [:multi, [:code, " true "], [:erb, :block, 1, 2, " form_for do ", [:multi, [:code, " 1 "], [:code, " 2 "], [:erb, :block, 3, 4, " nested do ", [:multi, [:code, " this "]]]]]]
+  end
+
+  it "generates ruby" do
+    Erbse::Engine.
+      new().
+      (str).must_equal "_buf = [];  true ; _erbse_blockfilter1 =  form_for do ; _erbse_blockfilter2 = '';  1 ;  2 ; _erbse_blockfilter3 =  nested do ; _erbse_blockfilter4 = '';  this ; _erbse_blockfilter4; end; _erbse_blockfilter2 << ((_erbse_blockfilter3).to_s); _erbse_blockfilter2; end; _buf << (_erbse_blockfilter1); _buf = _buf.join(\"\".freeze)"
   end
 end
 
@@ -167,25 +176,32 @@ puts past.inspect
 
 past = [:multi, [:code, "loop do"], [:static, "Hello"], [:code, "end"]]
 
-past = [:multi, [:code, " true "], [:erb, :block, 1, 2, " form_for do ", [:multi, [:code, " 1 "], [:code, " 2 "], [:erb, :block, 3, 4, " nested do ", [:multi, [:code, " this "]]]]]]
-class BlockFilter < Temple::Filter
-  define_options :key
+past = [:multi, [:code, " true "], [:erb, :block, 1, 2, " form_for do ", [:multi, [:dynamic, " 1 "], [:code, " 2 "], [:erb, :block, 3, 4, " nested do ", [:multi, [:dynamic, " this "]]]]]]
+module Erbse
+  class BlockFilter < Temple::Filter
+    # Highly inspired by https://github.com/slim-template/slim/blob/master/lib/slim/controls.rb#on_slim_output
+    def on_erb_block(outter_i, inner_i, code, content_ast)
+      # this is for <%= do %>
+      outter_i = unique_name
+      inner_i  = unique_name
 
-  # Highly inspired by https://github.com/slim-template/slim/blob/master/lib/slim/controls.rb#on_slim_output
-  def on_erb_block(outter_i, inner_i, code, content_ast)
-    # this is for <%= do %>
-    outter_i = unique_name
-    inner_i  = unique_name
-
-    # this still needs the Temple::Filters::ControlFlow run-through.
-    [:multi,
-      [:block, "#{outter_i} = #{code}", compile(content_ast)], # compile() is recursion on nested block content.
-      [:dynamic, outter_i] # return the outter buffer. # DISCUSS: why do we need that, again?
-    ]
+      # this still needs the Temple::Filters::ControlFlow run-through.
+      [:multi,
+        [:block, "#{outter_i} = #{code}",
+          [:capture, inner_i, compile(content_ast)] # compile() is recursion on nested block content.
+        ],
+        [:dynamic, outter_i] # return the outter buffer. # DISCUSS: why do we need that, again?
+      ]
+    end
   end
 end
-puts BlockFilter.new.(past).inspect
 
+block_ast = Erbse::BlockFilter.new.(past)
+puts block_ast.inspect
+
+past = Temple::Filters::ControlFlow.new().call(block_ast)
+puts Temple::Generators::ArrayBuffer.new.(past)
+puts
 
 # _buf = []; ob_1 = ''; loop do; ob_1 << ("Hello".freeze); end; ob_1; _buf = _buf.join("".freeze)
 
@@ -196,3 +212,19 @@ puts Temple::Generators::ArrayBuffer.new.(past)
 
 
 # core abstraction: multi, static, dynamic, code, newline and capture
+
+module Erbse
+  class Engine < Temple::Engine
+    use Parser
+    use BlockFilter
+
+    # filter :MultiFlattener
+    # filter :StaticMerger
+    # filter :DynamicInliner
+    filter :ControlFlow
+
+   # Finally the generator
+    generator :ArrayBuffer
+  end
+ # engine = MyEngine.new(strict: "For MyParser")
+end
