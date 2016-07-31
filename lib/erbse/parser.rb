@@ -13,7 +13,6 @@ module Erbse
 
     def call(str)
       pos = 0
-      is_bol = true     # is beginning of line
 
       buffers = []
       result = [:multi]
@@ -27,8 +26,6 @@ module Erbse
         text = str[pos, len]
         pos  = match.end(0)
         ch   = indicator ? indicator[0] : nil
-        lspace = ch == ?= ? nil : detect_spaces_at_bol(text, is_bol)
-        is_bol = rspace ? true : false
 
         result = buffers.last
         # puts "parsing #{code} to #{result.inspect}"
@@ -63,33 +60,6 @@ module Erbse
       end
 
       buffers.last
-    end
-
-    def detect_spaces_at_bol(text, is_bol)
-      lspace = nil
-      if text.empty?
-        lspace = "" if is_bol
-      elsif text[-1] == ?\n
-        lspace = ""
-      else
-        rindex = text.rindex(?\n)
-        if rindex
-          s = text[rindex+1..-1]
-          if s =~ /\A[ \t]*\z/
-            lspace = s
-            #text = text[0..rindex]
-            text[rindex+1..-1] = ''
-          end
-        else
-          if is_bol && text =~ /\A[ \t]*\z/
-            #lspace = text
-            #text = nil
-            lspace = text.dup
-            text[0..-1] = ''
-          end
-        end
-      end
-      return lspace
     end
   end
 end
