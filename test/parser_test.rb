@@ -164,9 +164,29 @@ past = Temple::Filters::ControlFlow.new().call([:block, 'loop do',
       [:static, 'Hello']])
 puts past.inspect
 
+
 past = [:multi, [:code, "loop do"], [:static, "Hello"], [:code, "end"]]
 
-past = [:multi, [:capture, "ob_1", [:multi, [:code, "loop do"], [:static, "Hello"], [:code, "end"]]]]
+past = [:multi, [:code, " true "], [:erb, :block, 1, 2, " form_for do ", [:multi, [:code, " 1 "], [:code, " 2 "], [:erb, :block, 3, 4, " nested do ", [:multi, [:code, " this "]]]]]]
+class BlockFilter < Temple::Filter
+  define_options :key
+
+  # Highly inspired by https://github.com/slim-template/slim/blob/master/lib/slim/controls.rb#on_slim_output
+  def on_erb_block(outter_i, inner_i, code, content_ast)
+    # this is for <%= do %>
+    outter_i = unique_name
+    inner_i  = unique_name
+
+    # this still needs the Temple::Filters::ControlFlow run-through.
+    [:multi,
+      [:block, "#{outter_i} = #{code}", compile(content_ast)], # compile() is recursion on nested block content.
+      [:dynamic, outter_i] # return the outter buffer. # DISCUSS: why do we need that, again?
+    ]
+  end
+end
+puts BlockFilter.new.(past).inspect
+
+
 # _buf = []; ob_1 = ''; loop do; ob_1 << ("Hello".freeze); end; ob_1; _buf = _buf.join("".freeze)
 
 past = [:multi, [:block, "ob_1 = "+"loop do", [:capture, "ob_2", [:multi, [:static, "Hello"]]]], [:dynamic, "ob_1"]]
