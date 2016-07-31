@@ -38,7 +38,7 @@ module Erbse
             buffers.last << [:erb, :block, index += 1, index += 1, code, block = [:multi]]
             buffers << block
           else
-            buffers.last << [:code, code]
+            buffers.last << [:dynamic, code]
           end
         end
 
