@@ -24,6 +24,9 @@ module Erbse
         ch   = indicator ? indicator[0] : nil
 
         result = buffers.last
+        if text and text.strip != ""
+          buffers.last << [:static, text]
+        end
 
         if ch == ?= # <%= %>
           if code =~ BLOCK_EXPR
@@ -52,10 +55,6 @@ module Erbse
         #     else
         #       generator.add_stmt(src, "\n" * n, "ob_#{buffers.size}")
         #     end
-        #   else
-
-        #                                                                                 # <% %>
-
       end
 
       buffers.last

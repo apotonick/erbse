@@ -6,6 +6,7 @@ require "test_helper"
 describe "AST" do
   let (:str) { %{
 <%= true %>
+Text
 <%= form_for do %><%= 1 %><% 2 %>
   <%= nested do %>
     <%= this %>
@@ -16,6 +17,7 @@ describe "AST" do
   it "what" do
     Erbse::Parser.new.(str).must_equal [:multi,
       [:dynamic, " true "],
+      [:static, "Text\n"],
       [:erb, :block, 1, 2, " form_for do ", [:multi,
         [:dynamic, " 1 "],
         [:code, " 2 "],

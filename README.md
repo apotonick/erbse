@@ -4,6 +4,11 @@ _An updated version of Erubis._
 
 Erbse compiles an ERB string to a string of Ruby. It is completely decoupled from any framework and does only one thing. Pretty boring, I know.
 
+## TODO
+
+* Add newlines in compiled Ruby.
+
+
 ## Added features
 
 * Block support à la Rails.
