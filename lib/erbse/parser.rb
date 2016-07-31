@@ -24,7 +24,6 @@ module Erbse
         ch   = indicator ? indicator[0] : nil
 
         result = buffers.last
-        # puts "parsing #{code} to #{result.inspect}"
 
         if ch == ?= # <%= %>
           if code =~ BLOCK_EXPR
@@ -33,11 +32,15 @@ module Erbse
           else
             buffers.last << [:dynamic, code]
           end
+        else # <% %>
+          if code =~ / end /
+            block = buffers.pop
+            next
+          end
+
+          buffers.last << [:code, code]
         end
 
-        if code =~ / end /
-          block = buffers.pop
-        end
 
 
         #     generator.add_expr_literal(src, code, indicator, "ob_#{top_buffer}", buffers)

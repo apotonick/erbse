@@ -20,7 +20,7 @@ describe "AST" do
         [:dynamic, " 1 "],
         [:code, " 2 "],
         [:erb, :block, 3, 4, " nested do ", [:multi,
-          [:code, " this "]]]]]]
+          [:dynamic, " this "]]]]]]
   end
 
   it "generates ruby" do
