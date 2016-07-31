@@ -1,28 +1,26 @@
 require "test_helper"
 
-str = %{
-<%= true %>
-<%= form_for do %><%= 1 %><%= 2 %>
-  <%= nested do %>
-    <%= this %>
-  <% end %>
-<% end %>}.gsub("\n","")
-
 #ob_0 = '';;ob_0<< ( true ).to_s;ob_0 << ' '.freeze;;ob_1 =  form_for do ; ob_2='';;ob_2<< ( 1 ).to_s;;ob_2<< ( 2 ).to_s;;ob_3 =  nested do ; ob_4='';;ob_4<< ( 3 ).to_s;;ob_4<< ( 4 ).to_s;ob_4; end ;ob_2 << ob_3;ob_3; end ;ob_1 << ob_2;ob_0.to_s
 
 
 describe "AST" do
   let (:str) { %{
 <%= true %>
-<%= form_for do %><%= 1 %><%= 2 %>
+<%= form_for do %><%= 1 %><% 2 %>
   <%= nested do %>
     <%= this %>
   <% end %>
-<% end %>}.gsub("\n","")
+<% end %>}
 }
 
   it "what" do
-    Erbse::Parser.new.(str).must_equal [:multi, [:code, " true "], [:erb, :block, 1, 2, " form_for do ", [:multi, [:code, " 1 "], [:code, " 2 "], [:erb, :block, 3, 4, " nested do ", [:multi, [:code, " this "]]]]]]
+    Erbse::Parser.new.(str).must_equal [:multi,
+      [:dynamic, " true "],
+      [:erb, :block, 1, 2, " form_for do ", [:multi,
+        [:dynamic, " 1 "],
+        [:code, " 2 "],
+        [:erb, :block, 3, 4, " nested do ", [:multi,
+          [:code, " this "]]]]]]
   end
 
   it "generates ruby" do
