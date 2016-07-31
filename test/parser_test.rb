@@ -10,6 +10,7 @@ Text
 <%= form_for do %><%= 1 %><% 2 %>
   <%= nested do %>
     <%= this %>
+    <a/>
   <% end %>
 <% end %>}
 }
@@ -22,7 +23,9 @@ Text
         [:dynamic, " 1 "],
         [:code, " 2 "],
         [:erb, :block, 3, 4, " nested do ", [:multi,
-          [:dynamic, " this "]]]]]]
+          [:dynamic, " this "],
+          [:static, "    <a/>\n  "],
+          ]]]]]
   end
 
   it "generates ruby" do
