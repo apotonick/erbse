@@ -6,7 +6,7 @@ require "erbse/template"
 module Erbse
   class BlockFilter < Temple::Filter
     # Highly inspired by https://github.com/slim-template/slim/blob/master/lib/slim/controls.rb#on_slim_output
-    def on_erb_block(outter_i, inner_i, code, content_ast)
+    def on_erb_block(code, content_ast)
       # this is for <%= do %>
       outter_i = unique_name
       inner_i  = unique_name

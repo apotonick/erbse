@@ -23,27 +23,30 @@ module Erbse
         pos  = match.end(0)
         ch   = indicator ? indicator[0] : nil
 
-        result = buffers.last
-        if text and text.strip != ""
+        if text and !text.strip.empty? # text
           buffers.last << [:static, text]
         end
 
         if ch == ?= # <%= %>
           if code =~ BLOCK_EXPR
-            buffers.last << [:erb, :block, index += 1, index += 1, code, block = [:multi]]
+            buffers.last << [:erb, :block, code, block = [:multi]] # picked up by our own BlockFilter
             buffers << block
           else
             buffers.last << [:dynamic, code]
           end
         else # <% %>
           if code =~ / end /
-            block = buffers.pop
+            buffers.pop
             next
           end
 
-          buffers.last << [:code, code]
+          if code =~ BLOCK_EXPR
+            buffers.last << [:block, code, block = [:multi]]
+            buffers << block
+          else
+            buffers.last << [:code, code]
+          end
         end
-
 
 
         #     generator.add_expr_literal(src, code, indicator, "ob_#{top_buffer}", buffers)
