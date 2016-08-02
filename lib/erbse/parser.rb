@@ -14,8 +14,6 @@ module Erbse
       result = [:multi]
       buffers << result
 
-      index = 0
-
       str.scan(DEFAULT_REGEXP) do |indicator, code|
         match = Regexp.last_match()
         len  = match.begin(0) - pos
@@ -41,15 +39,12 @@ module Erbse
           end
 
           if code =~ BLOCK_EXPR
-            buffers.last << [:block, code, block = [:multi]]
+            buffers.last << [:block, code, block = [:multi]] # picked up by Temple's ControlFlow filter.
             buffers << block
           else
             buffers.last << [:code, code]
           end
         end
-
-
-        #     generator.add_expr_literal(src, code, indicator, "ob_#{top_buffer}", buffers)
 
         #   elsif ch == ?\#                                                                       # <%# %>
         #     n = code.count("\n") + (rspace ? 1 : 0)
