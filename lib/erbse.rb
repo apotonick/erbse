@@ -1,7 +1,6 @@
 require "temple"
 require "erbse/parser"
 require "erbse/template"
-# require "erbse/eruby"
 
 module Erbse
   class BlockFilter < Temple::Filter
@@ -30,9 +29,7 @@ module Erbse
     # filter :DynamicInliner
     filter :ControlFlow
 
-   # Finally the generator
     generator :ArrayBuffer
   end
-
 end
 

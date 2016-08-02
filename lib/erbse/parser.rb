@@ -1,21 +1,22 @@
 module Erbse
   class Parser
     # DEFAULT_REGEXP = /<%(=+|-|\#|%)?(.*?)([-=])?%>([ \t]*\r?\n)?/m
-    DEFAULT_REGEXP = /<%(=|\#)?(.*?)%>([ \t]*\r?\n)?/m
+    DEFAULT_REGEXP = /<%(=|\#)?(.*?)%>(\n)?/m
     BLOCK_EXPR     = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
+    IF_RE = /\b(if|unless)\b|\bdo\s*(\|[^\|]*\|)?\s*$/
 
     def initialize(*)
     end
 
     def call(str)
       pos = 0
-
       buffers = []
       result = [:multi]
       buffers << result
+      match = nil
 
       str.scan(DEFAULT_REGEXP) do |indicator, code|
-        match = Regexp.last_match()
+        match = Regexp.last_match
         len  = match.begin(0) - pos
         text = str[pos, len]
         pos  = match.end(0)
@@ -26,8 +27,8 @@ module Erbse
         end
 
         if ch == ?= # <%= %>
-          if code =~ BLOCK_EXPR
-            buffers.last << [:erb, :block, code, block = [:multi]] # picked up by our own BlockFilter
+          if code =~ IF_RE
+            buffers.last << [:erb, :block, code, block = [:multi]] # picked up by our own BlockFilter.
             buffers << block
           else
             buffers.last << [:dynamic, code]
@@ -38,7 +39,7 @@ module Erbse
             next
           end
 
-          if code =~ BLOCK_EXPR
+          if code =~ IF_RE
             buffers.last << [:block, code, block = [:multi]] # picked up by Temple's ControlFlow filter.
             buffers << block
           else
@@ -54,6 +55,8 @@ module Erbse
         #       generator.add_stmt(src, "\n" * n, "ob_#{buffers.size}")
         #     end
       end
+
+      buffers.last << [:static, str] unless match # no <%* %> found in document: add entire string as static.
 
       buffers.last
     end
