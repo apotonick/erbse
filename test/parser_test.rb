@@ -37,15 +37,25 @@ Text
 
   describe "<% %>" do
     let (:str) { %{
-<% this %>
+<% self %>
 <% 2.times do |i| %>
-  <%= puts i %>
+  <%= i+1 %>
   <% puts %>
 <% end %>
 }
     }
     it "what" do
-      Erbse::Parser.new.(str).must_equal [:multi, [:code, " this "], [:block, " 2.times do |i| ", [:multi, [:dynamic, " puts i "], [:code, " puts "]]]]
+      Erbse::Parser.new.(str).must_equal [:multi, [:code, " self "], [:block, " 2.times do |i| ", [:multi, [:dynamic, " i+1 "], [:code, " puts "]]]]
+    end
+
+    it do
+      ruby = Erbse::Engine.new.(str)
+      ruby.must_equal %{_buf = [];  self ;  2.times do |i| ; _buf << ( i+1 );  puts ; end; _buf = _buf.join(\"\".freeze)}
+    end
+
+    it do
+      ruby = Erbse::Engine.new.(str)
+      eval(ruby).must_equal "12"
     end
   end
 end
