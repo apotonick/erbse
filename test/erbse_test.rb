@@ -16,15 +16,15 @@ Text
 
   it "what" do
     Erbse::Parser.new.(str).must_equal [:multi,
-      [:dynamic, " true "],
+      [:dynamic, " true "], [:newline],
       [:static, "Text\n"],
       [:erb, :block, " form_for do ", [:multi,
         [:dynamic, " 1 "],
-        [:code, " 2 "],
-        [:erb, :block, " nested do ", [:multi,
-          [:dynamic, " this "],
+        [:code, " 2 "], [:newline],
+        [:erb, :block, " nested do ", [:multi, [:newline],
+          [:dynamic, " this "], [:newline],
           [:static, "    <a/>\n  "],
-          ]]]]]
+          ]], [:newline]]]]
   end
 
   it "generates ruby" do
@@ -47,8 +47,14 @@ Text
 }
     }
     it "what" do
-      Erbse::Parser.new.(str).must_equal [:multi, [:code, " self "], [:block, " 2.times do |i| ", [:multi, [:dynamic, " i+1 "], [:code, " puts "]]], [:block, " if 1 ", [:multi, [:static, "  Hello
-"]]]]
+      Erbse::Parser.new.(str).must_equal [:multi,
+        [:code, " self "], [:newline],
+        [:block, " 2.times do |i| ", [:multi, [:newline],
+          [:dynamic, " i+1 "], [:newline],
+          [:code, " puts "], [:newline]]], [:newline],
+        [:block, " if 1 ", [:multi, [:newline],
+          [:static, "  Hello
+"]]], [:newline]]
     end
 
     it do

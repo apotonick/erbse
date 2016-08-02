@@ -1,9 +1,9 @@
 module Erbse
   class Parser
-    # DEFAULT_REGEXP = /<%(=+|-|\#|%)?(.*?)([-=])?%>([ \t]*\r?\n)?/m
-    DEFAULT_REGEXP = /<%(=|\#)?(.*?)%>(\n)?/m
-    BLOCK_EXPR     = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
-    IF_RE = /\b(if|unless)\b|\bdo\s*(\|[^\|]*\|)?\s*$/
+    # ERB_EXPR = /<%(=+|-|\#|%)?(.*?)([-=])?%>([ \t]*\r?\n)?/m
+    ERB_EXPR = /<%(=|\#)?(.*?)%>(\n)*/m
+    # BLOCK_EXPR     = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
+    BLOCK_EXPR = /\b(if|unless)\b|\bdo\b/
 
     def initialize(*)
     end
@@ -15,7 +15,7 @@ module Erbse
       buffers << result
       match = nil
 
-      str.scan(DEFAULT_REGEXP) do |indicator, code|
+      str.scan(ERB_EXPR) do |indicator, code, newlines|
         match = Regexp.last_match
         len  = match.begin(0) - pos
         text = str[pos, len]
@@ -27,19 +27,16 @@ module Erbse
         end
 
         if ch == ?= # <%= %>
-          if code =~ IF_RE
+          if code =~ BLOCK_EXPR
             buffers.last << [:erb, :block, code, block = [:multi]] # picked up by our own BlockFilter.
             buffers << block
           else
             buffers.last << [:dynamic, code]
           end
+        elsif code =~ /\bend\b/ # <% end %>
+          buffers.pop
         else # <% %>
-          if code =~ / end /
-            buffers.pop
-            next
-          end
-
-          if code =~ IF_RE
+          if code =~ BLOCK_EXPR
             buffers.last << [:block, code, block = [:multi]] # picked up by Temple's ControlFlow filter.
             buffers << block
           else
@@ -47,6 +44,9 @@ module Erbse
           end
         end
 
+        # FIXME: only adds one newline.
+        # TODO: does that influence speed?
+        buffers.last <<  [:newline]  if newlines
         #   elsif ch == ?\#                                                                       # <%# %>
         #     n = code.count("\n") + (rspace ? 1 : 0)
         #     if @trim && lspace && rspace
