@@ -71,16 +71,30 @@ Text
   end
 
   describe "pure text" do
-    let (:str) { %{Hola
+    let (:str) { %{Holla
 Hi}
     }
     it "what" do
+      Erbse::Parser.new.(str).must_equal [:multi, [:static, "Holla\nHi"]]
+    end
+  end
+
+  describe "<%# this %>" do
+    let (:str) { %{Hello
+<%# Ignore this %>
+Hola
+<%# Ignore
+this %>
+Hi
+<% # this %>
+      } }
+
+    it do
       Erbse::Parser.new.(str).must_equal [:multi, [:static, "Hola\nHi"]]
     end
 
-    it do
-      ruby = Erbse::Engine.new.(str)
-      # ruby.must_equal %{_buf = [];  self ;  2.times do |i| ; _buf << ( i+1 );  puts ; end; _buf = _buf.join(\"\".freeze)}
+    it "what" do
+      ruby = Erbse::Engine.new.(str).must_equal "12  Hello\n"
     end
   end
 end

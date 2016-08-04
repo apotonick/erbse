@@ -35,6 +35,9 @@ module Erbse
           end
         elsif code =~ /\bend\b/ # <% end %>
           buffers.pop
+        elsif ch =~ /#/ # DISCUSS: doesn't catch <% # this %>
+          newlines = code.count("\n")
+          buffers.last.concat  [[:newline]] * newlines if newlines > 0
         else # <% %>
           if code =~ BLOCK_EXPR
             buffers.last << [:block, code, block = [:multi]] # picked up by Temple's ControlFlow filter.
