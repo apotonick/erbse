@@ -28,9 +28,10 @@ Text
   end
 
   it "generates ruby" do
-    code = %{_buf = []; _buf << ( true ); _buf << ("Text\n".freeze); _erbse_blockfilter1 =  form_for do ; _erbse_blockfilter2 = ''; _erbse_blockfilter2 << (( 1 ).to_s);  2 ; _erbse_blockfilter3 =  nested do ; _erbse_blockfilter4 = ''; _erbse_blockfilter4 << (( this ).to_s); _erbse_blockfilter4 << ("    <a/>\n  ".freeze); _erbse_blockfilter4; end; _erbse_blockfilter2 << ((_erbse_blockfilter3).to_s); _erbse_blockfilter2; end; _buf << (_erbse_blockfilter1); _buf = _buf.join("".freeze)}
-    # puts Erbse::Engine.new().(str)
-    Erbse::Engine.new.(str).must_equal code
+      code = %{_buf = []; _buf << ( true ); @; _buf << ("Text@@".freeze); _erbse_blockfilter1 =  form_for do ; _erbse_blockfilter2 = ''; _erbse_blockfilter2 << (( 1 ).to_s);  2 ; @; _erbse_blockfilter3 =  nested do ; _erbse_blockfilter4 = ''; @; _erbse_blockfilter4 << (( this ).to_s); @; _erbse_blockfilter4 << ("    <a/>@@  ".freeze); _erbse_blockfilter4; end; _erbse_blockfilter2 << ((_erbse_blockfilter3).to_s); @; _erbse_blockfilter2; end; _buf << (_erbse_blockfilter1); _buf = _buf.join("".freeze)}
+    ruby = Erbse::Engine.new.(str).gsub("\n", "@").gsub('\n', "@@")
+    # puts ruby
+    ruby.must_equal code
   end
 
   describe "<% %>" do
@@ -59,9 +60,10 @@ Text
 
     it do
       ruby = Erbse::Engine.new.(str)
+      ruby = ruby.gsub("\n", "@")
+
       # ruby.must_equal %{_buf = [];  self ;  2.times do |i| ; _buf << ( i+1 );  puts ; end; _buf = _buf.join(\"\".freeze)}
-      ruby.must_equal %{_buf = [];  self ;  2.times do |i| ; _buf << ( i+1 );  puts ; end;  if 1 ; _buf << (\"  Hello
- \".freeze); end; _buf = _buf.join(\"\".freeze)}
+      ruby.must_equal '_buf = [];  self ; @;  2.times do |i| ; @; _buf << ( i+1 ); @;  puts ; @; end; @;  if 1 ; @; _buf << ("  Hello\n".freeze); end; @; _buf = _buf.join("".freeze)'
     end
 
     it do
@@ -90,11 +92,13 @@ Hi
       } }
 
     it do
-      Erbse::Parser.new.(str).must_equal [:multi, [:static, "Hola\nHi"]]
+      Erbse::Parser.new.(str).must_equal [:multi, [:static, "Hello\n"], [:newline], [:static, "Hola\n"], [:newline], [:newline], [:static, "Hi\n"], [:code, " # this "], [:newline]]
     end
 
     it "what" do
-      ruby = Erbse::Engine.new.(str).must_equal "12  Hello\n"
+      ruby = Erbse::Engine.new.(str).gsub("\n", "@").gsub('\n', "@@")
+      code = %{_buf = []; _buf << ("Hello@@".freeze); @; _buf << ("Hola@@".freeze); @; @; _buf << ("Hi@@".freeze);  # this ; @; _buf = _buf.join("".freeze)}
+      ruby.must_equal code
     end
   end
 end

@@ -6,6 +6,7 @@ Erbse compiles an ERB string to a string of Ruby. It is completely decoupled fro
 
 ## TODO
 
+* Block comments
 * Add newlines in compiled Ruby.
 
 
