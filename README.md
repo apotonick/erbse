@@ -2,13 +2,14 @@
 
 _An updated version of Erubis._
 
-Erbse compiles an ERB string to a string of Ruby. It is completely decoupled from any framework and does only one thing. Pretty boring, I know.
+Erbse compiles an ERB string to a string of Ruby. It is completely decoupled from any framework and does only one thing.
 
 ## TODO
 
 * Block comments
 * Add newlines in compiled Ruby.
 
+## Block Yielding
 
 ## Added features
 
@@ -55,9 +56,6 @@ Feel free to contribute!!!
 ## Used where?
 
 Erbse is the ERB engine in [Cells 4](https://github.com/apotonick/cells) in combination with Tilt..
-
-It also hopefully gets used in Rails 5/6, so we can remove those horrible hacks from AV.
-
 
 # License
 
