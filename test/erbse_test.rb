@@ -101,4 +101,13 @@ Hi
       ruby.must_equal code
     end
   end
+
+  describe "multiple tags in one row" do
+    let (:str) { %{<b><%= 1 %></b>} }
+
+    it do
+      Erbse::Parser.new.(str).must_equal []
+    end
+
+  end
 end
