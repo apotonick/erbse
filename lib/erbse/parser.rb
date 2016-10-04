@@ -16,9 +16,9 @@ module Erbse
       match = nil
 
       str.scan(ERB_EXPR) do |indicator, code, newlines|
-        # puts "@@@@@ #{indicator.inspect}, #{code}, #{newlines.inspect}"
         match = Regexp.last_match
         len  = match.begin(0) - pos
+
         text = str[pos, len]
         pos  = match.end(0)
         ch   = indicator ? indicator[0] : nil
@@ -50,10 +50,11 @@ module Erbse
 
         # FIXME: only adds one newline.
         # TODO: does that influence speed?
-        buffers.last <<  [:newline]  if newlines
+        buffers.last << [:newline] if newlines
       end
 
-      buffers.last << [:static, str] unless match # no <%* %> found in document: add entire string as static.
+      # add text after last/none ERB tag.
+      buffers.last << [:static, str[pos..str.length]] if pos < str.length
 
       buffers.last
     end

@@ -76,9 +76,7 @@ Text
     let (:str) { %{Holla
 Hi}
     }
-    it "what" do
-      Erbse::Parser.new.(str).must_equal [:multi, [:static, "Holla\nHi"]]
-    end
+    it { Erbse::Parser.new.(str).must_equal [:multi, [:static, "Holla\nHi"]] }
   end
 
   describe "<%# this %>" do
@@ -89,7 +87,7 @@ Hola
 this %>
 Hi
 <% # this %>
-      } }
+} }
 
     it do
       Erbse::Parser.new.(str).must_equal [:multi, [:static, "Hello\n"], [:newline], [:static, "Hola\n"], [:newline], [:newline], [:static, "Hi\n"], [:code, " # this "], [:newline]]
@@ -102,12 +100,10 @@ Hi
     end
   end
 
-  describe "multiple tags in one row" do
-    let (:str) { %{<b><%= 1 %></b>} }
+  describe "content after last ERB tag" do
+    let (:str) { %{<b><%= 1 %>bla
+blubb</b>} }
 
-    it do
-      Erbse::Parser.new.(str).must_equal []
-    end
-
+    it { Erbse::Parser.new.(str).must_equal [:multi, [:static, "<b>"], [:dynamic, " 1 "], [:static, "bla\nblubb</b>"]] }
   end
 end
