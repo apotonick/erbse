@@ -79,6 +79,7 @@ Hi}
     it { Erbse::Parser.new.(str).must_equal [:multi, [:static, "Holla\nHi"]] }
   end
 
+  # comments
   describe "<%# this %>" do
     let (:str) { %{Hello
 <%# Ignore this %>
@@ -93,7 +94,7 @@ Hi
       Erbse::Parser.new.(str).must_equal [:multi, [:static, "Hello\n"], [:newline], [:static, "Hola\n"], [:newline], [:newline], [:static, "Hi\n"], [:code, " # this "], [:newline]]
     end
 
-    it "what" do
+    it do
       ruby = Erbse::Engine.new.(str).gsub("\n", "@").gsub('\n', "@@")
       code = %{_buf = []; _buf << ("Hello@@".freeze); @; _buf << ("Hola@@".freeze); @; @; _buf << ("Hi@@".freeze);  # this ; @; _buf = _buf.join("".freeze)}
       ruby.must_equal code
