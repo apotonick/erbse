@@ -4,6 +4,18 @@ _An updated version of Erubis._
 
 Erbse compiles an ERB string to a string of Ruby.
 
+## API
+
+The API is one public method.
+
+```ruby
+Erbse::Engine.new.call("<% ... %>") #=> string of compiled ruby.
+```
+
+The returned string can then be `eval`uated in a certain context.
+
+The user layer, like Tilt, has to take care of caching the `Erbse::Template` instances.
+
 ## Block Yielding
 
 Erbse supports blocks à la Rails.
@@ -35,18 +47,6 @@ However, you can totally pass that block to a completely different object and yi
 ## Removed Features
 
 Erbse does *not* support any tags other than `<% %>` and `<%= %>`. Tags such as `<%% %>`, `<%== %>`, `<%- %>` or `<% -%>` will be reduced to the supported tags.
-
-## API
-
-The API is extremely simple.
-
-```ruby
-Erbse::Template.new("<% ... %>").call #=> string of compiled ruby.
-```
-
-Template only accepts a content string which is the ERB template. The only public `#call` method returns a string of the compiled template that can then be evaluated in a context.
-
-The user layer, like Tilt, has to take care of caching the `Erbse::Template` instances.
 
 ## TODO
 
