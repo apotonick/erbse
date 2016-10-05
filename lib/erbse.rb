@@ -31,5 +31,6 @@ module Erbse
 
     generator :ArrayBuffer
   end
+  # DISCUSS: can we add more optimizers?
 end
 
