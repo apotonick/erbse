@@ -107,4 +107,10 @@ blubb</b>} }
 
     it { Erbse::Parser.new.(str).must_equal [:multi, [:static, "<b>"], [:dynamic, " 1 "], [:static, "bla\nblubb</b>"]] }
   end
+
+  describe "<%* %>" do
+    it { Erbse::Parser.new.(%{<%- 1 %>}).must_equal [:multi, [:code, " 1 "]] }
+    it { Erbse::Parser.new.(%{<%% 1 %>}).must_equal [:multi, [:code, " 1 "]] }
+    it { Erbse::Parser.new.(%{<%% 1 -%>}).must_equal [:multi, [:code, " 1 "]] }
+  end
 end
