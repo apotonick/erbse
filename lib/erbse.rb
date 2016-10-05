@@ -1,6 +1,5 @@
 require "temple"
 require "erbse/parser"
-require "erbse/template"
 
 module Erbse
   class BlockFilter < Temple::Filter
