@@ -4,24 +4,37 @@ _An updated version of Erubis._
 
 Erbse compiles an ERB string to a string of Ruby.
 
-## TODO
-
-* Block comments
-* Add newlines in compiled Ruby.
-
 ## Block Yielding
 
-## Added features
+Erbse supports blocks à la Rails.
 
-* Block support à la Rails.
+You may pass any mix of text/ERB via blocks to Ruby methods.
 
-  ```erb
-  <%= form_tag .. do |f| %>
-    <%= f.fields_for do %>
-     ...
-    <% end %>
-  <% end %>
-  ```
+```erb
+<%= form do %>
+  <em>Please fill out all fields!</em>
+  <%= input :email %>
+  <button type="submit">
+<% end %>
+```
+
+Here, the `form` method receives a block of compiled Ruby.
+
+When `yield`ed, the block simply returns its evaluated content as a string. It's your job to assign it to an output buffer, **no instance variables are used**.
+
+```ruby
+def form(&block)
+  content = yield
+  "<form>#{content}</form>"
+end
+```
+Usually, returning the content from the helper will be sufficient.
+
+However, you can totally pass that block to a completely different object and yield it there. Since there's no global state as in ERB, this will work.
+
+## Removed Features
+
+Erbse does *not* support any tags other than `<% %>` and `<%= %>`. Tags such as `<%% %>`, `<%== %>`, `<%- %>` or `<% -%>` will be reduced to the supported tags.
 
 ## API
 
@@ -35,6 +48,10 @@ Template only accepts a content string which is the ERB template. The only publi
 
 The user layer, like Tilt, has to take care of caching the `Erbse::Template` instances.
 
+## TODO
+
+* Block comments
+* Add newlines in compiled Ruby.
 
 ## Planned
 
@@ -52,16 +69,15 @@ This fragment could then be overridden.
 
 Feel free to contribute!!!
 
+## Users
 
-## Used where?
+Erbse is the ERB engine in [Cells](https://github.com/apotonick/cells).
 
-Erbse is the ERB engine in [Cells 4](https://github.com/apotonick/cells) in combination with Tilt..
-
-# License
+## License
 
 MIT License
 
-# Contributors
+## Contributors
 
 * Special thanks to [Aman Gupta](https://github.com/tmm1) for [performance tweaks](https://github.com/rails/rails/pull/9555) that are merged in Erbse.
 * @iazel
