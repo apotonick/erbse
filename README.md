@@ -9,12 +9,10 @@ Erbse compiles an ERB string to a string of Ruby.
 The API is one public method.
 
 ```ruby
-Erbse::Template.new("<% ... %>").call #=> string of compiled ruby.
+Erbse::Engine.new.call("<% ... %>") #=> string of compiled ruby.
 ```
 
 The returned string can then be `eval`uated in a certain context.
-
-The user layer, like Tilt, has to take care of caching the `Erbse::Template` instances.
 
 ## Block Yielding
 
