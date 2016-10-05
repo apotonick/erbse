@@ -9,7 +9,7 @@ Erbse compiles an ERB string to a string of Ruby.
 The API is one public method.
 
 ```ruby
-Erbse::Engine.new.call("<% ... %>") #=> string of compiled ruby.
+Erbse::Template.new("<% ... %>").call #=> string of compiled ruby.
 ```
 
 The returned string can then be `eval`uated in a certain context.
