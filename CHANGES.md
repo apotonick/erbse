@@ -1,3 +1,7 @@
+# 0.1.1
+
+# Make comments be recognized before `end`, which fixes a syntax error with `<%# end %>`.
+
 # 0.1.0
 
 * Internally, we're parsing the ERB template into a SEXP structure and let [Temple](https://github.com/judofyr/temple) compile it to Ruby. Many thanks to the Temple team! 😘

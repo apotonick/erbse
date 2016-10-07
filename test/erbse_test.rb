@@ -99,6 +99,12 @@ Hi
       code = %{_buf = []; _buf << ("Hello@@".freeze); @; _buf << ("Hola@@".freeze); @; @; _buf << ("Hi@@".freeze);  # this ; @; _buf = _buf.join("".freeze)}
       ruby.must_equal code
     end
+
+    # <%# end %>
+    it { Erbse::Parser.new.(%{Yo
+<%# bla do %>
+<%# end %>
+1}).must_equal [:multi, [:static, "Yo\n"], [:newline], [:newline], [:static, "1"]] }
   end
 
   describe "content after last ERB tag" do
