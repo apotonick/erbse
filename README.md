@@ -17,6 +17,7 @@ The returned string can then be `eval`uated in a certain context.
 ## Output Buffers
 
 Erbse does not use instance variables as output buffer, only local variables.
+
 | Tag | Behavior |
 | --- | --- |
 | `<% %>` | Executes the code but does not output anything. |
