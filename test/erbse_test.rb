@@ -119,4 +119,19 @@ blubb</b>} }
     it { Erbse::Parser.new.(%{<%% 1 %>}).must_equal [:multi, [:code, " 1 "]] }
     it { Erbse::Parser.new.(%{<%% 1 -%>}).must_equal [:multi, [:code, " 1 "]] }
   end
+
+  describe "<% var = 1 %>" do
+    let (:str) { %{<% var = 1 %><%= var %>} }
+    it { eval(Erbse::Engine.new.(str)).must_equal "1" }
+  end
+
+  describe "<% \"string with do\" %>" do
+    it { Erbse::Parser.new.(%{<% var = "do 1" %><%= var %>}).must_equal [:multi, [:code, " var = \"do 1\" "], [:dynamic, " var "]] }
+    it { Erbse::Parser.new.(%{<% var = " do 1" %><%= var %>}).must_equal [:multi, [:code, " var = \" do 1\" "], [:dynamic, " var "]] }
+  end
+
+  describe "do" do
+    it { Erbse::Parser.new.(%{<% form do %>1<% end %>}).must_equal [:multi, [:block, " form do ", [:multi, [:static, "1"]]]] }
+    it { Erbse::Parser.new.(%{<% form do |i| %>1<% end %>}).must_equal [:multi, [:block, " form do |i| ", [:multi, [:static, "1"]]]] }
+  end
 end
