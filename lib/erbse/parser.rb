@@ -1,7 +1,7 @@
 module Erbse
   class Parser
     # ERB_EXPR = /<%(=|\#)?(.*?)%>(\n)*/m # this is the desired pattern.
-    ERB_EXPR = /<%(=+|-|\#|%)?(.*?)[-=]?%>(\n)*/m # this is for backward-compatibility.
+    ERB_EXPR = /<%(=+|-|\#|@|%)?(.*?)[-=]?%>(\n)*/m # this is for backward-compatibility.
     # BLOCK_EXPR     = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
     BLOCK_EXPR = /\b(if|unless)\b|\sdo\s*$|\sdo\s+\|/
 
@@ -44,6 +44,9 @@ module Erbse
           buffers.last.concat  [[:newline]] * newlines if newlines > 0
         elsif code =~ /\bend\b/ # <% end %>
           buffers.pop
+        elsif ch == ?@
+          buffers.last << [:capture, :block, code, block = [:multi]] # picked up by our own BlockFilter. # TODO: merge with %= ?
+          buffers << block
         else # <% %>
           if code =~ BLOCK_EXPR
             buffers.last << [:block, code, block = [:multi]] # picked up by Temple's ControlFlow filter.

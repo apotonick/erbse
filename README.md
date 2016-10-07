@@ -42,6 +42,28 @@ Usually, returning the content from the helper will be sufficient.
 
 However, you can totally pass that block to a completely different object and yield it there. Since there's no global state as in ERB, this will work.
 
+## Capture
+
+With the `<%= helper do %>` tag, block content is assigned to a new output buffer and the result of `helper` rendered.
+
+To capture the block without outputting anything, use the `<%@ %>` tag. This will still use a new output buffer for the block, but not output anything.
+
+```erb
+<%@ content = capture do %>
+  Whatever
+<% end %>
+
+<%= content %>
+```
+
+The `capture` method will receive a block, what you do with it is up to you. It would usually simply yield the block.
+
+```ruby
+def capture(&block)
+  yield
+end
+```
+
 ## Removed Features
 
 Erbse does *not* support any tags other than `<% %>` and `<%= %>`. Tags such as `<%% %>`, `<%== %>`, `<%- %>` or `<% -%>` will be reduced to the supported tags.
@@ -52,6 +74,11 @@ The parser code got drastically reduced and might be missing essential features.
 
 * Block comments
 * Add newlines in compiled Ruby.
+
+## Buffers
+
+% writes to outer buffer
+%= writes to new block buffer
 
 ## Planned
 

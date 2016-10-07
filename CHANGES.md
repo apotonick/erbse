@@ -1,6 +1,8 @@
 # 0.1.1
 
-# Make comments be recognized before `end`, which fixes a syntax error with `<%# end %>`.
+* Introduce the `<%@ %>` tag. This is a built-in capture mechanism. It will assign all block content to a local variable but *not* output it.
+* Make comments be recognized before `end`, which fixes a syntax error with `<%# end %>`.
+* Don't recognize ERB tags with a string containing "do" as a block.
 
 # 0.1.0
 
