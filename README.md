@@ -14,6 +14,17 @@ Erbse::Engine.new.call("<% ... %>") #=> string of compiled ruby.
 
 The returned string can then be `eval`uated in a certain context.
 
+## Output Buffers
+
+Erbse does not use instance variables as output buffer, only local variables.
+
+| `<% %>` | Executes the code but does not output anything. |
+| `<% .. do %>` | Executes the code but does not output anything. In the block, output is written to the current buffer. |
+| `<%= %>` | Executes the code, outputs to current buffer. |
+| `<%= .. do %>` | Executes the code and appends returned value to the current buffer. In the block, output is written to a new buffer that is returned when `yield`ing. |
+| `<%@ .. do %>` | Executes the code but does not output anything. In the block, output is written to a new buffer that is returned when `yield`ing. |
+
+
 ## Block Yielding
 
 Erbse supports blocks à la Rails.
@@ -66,7 +77,7 @@ end
 
 ## Removed Features
 
-Erbse does *not* support any tags other than `<% %>` and `<%= %>`. Tags such as `<%% %>`, `<%== %>`, `<%- %>` or `<% -%>` will be reduced to the supported tags.
+Erbse does *not* support any tags other than `<% %>`, `<%= %>` and `<%@ %>`. Tags such as `<%% %>`, `<%== %>`, `<%- %>` or `<% -%>` will be reduced to the supported tags.
 
 ## TODO
 
@@ -74,11 +85,6 @@ The parser code got drastically reduced and might be missing essential features.
 
 * Block comments
 * Add newlines in compiled Ruby.
-
-## Buffers
-
-% writes to outer buffer
-%= writes to new block buffer
 
 ## Planned
 
