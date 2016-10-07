@@ -48,6 +48,8 @@ Erbse does *not* support any tags other than `<% %>` and `<%= %>`. Tags such as 
 
 ## TODO
 
+The parser code got drastically reduced and might be missing essential features. [Please report](https://github.com/apotonick/erbse/issues) compiled syntax errors.
+
 * Block comments
 * Add newlines in compiled Ruby.
 
