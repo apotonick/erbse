@@ -1,7 +1,7 @@
 module Erbse
   class Parser
     # ERB_EXPR = /<%(=|\#)?(.*?)%>(\n)*/m # this is the desired pattern.
-    ERB_EXPR = /<%(=+|-|\#|@|%)?(.*?)[-=]?%>(\n)*/m # this is for backward-compatibility.
+    ERB_EXPR = /<%(=+|-|\#|@\s|%)?(.*?)[-=]?%>(\n)*/m # this is for backward-compatibility.
     # BLOCK_EXPR     = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
     BLOCK_EXPR = /\b(if|unless)\b|\sdo\s*$|\sdo\s+\|/
 

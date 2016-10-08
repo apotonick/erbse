@@ -135,7 +135,7 @@ blubb</b>} }
     it { Erbse::Parser.new.(%{<% form do |i| %>1<% end %>}).must_equal [:multi, [:block, " form do |i| ", [:multi, [:static, "1"]]]] }
   end
 
-  describe "capture" do
+  describe "<%@ %>" do
     let (:str) { %{<%@ content = capture do %>
   Yo!
   <%= 1 %>
@@ -143,8 +143,12 @@ blubb</b>} }
 
     it do
       ruby = Erbse::Engine.new.(str).gsub("\n", "@").gsub('\n', "@@")
-      code = %{_buf = [];  content = capture do ; _erbse_blockfilter1 = ''; @; _erbse_blockfilter1 << (\"  Yo!@@  \".freeze); _erbse_blockfilter1 << (( 1 ).to_s); @; _erbse_blockfilter1; end; _buf = _buf.join(\"\".freeze)}
+      code = %{_buf = []; content = capture do ; _erbse_blockfilter1 = ''; @; _erbse_blockfilter1 << (\"  Yo!@@  \".freeze); _erbse_blockfilter1 << (( 1 ).to_s); @; _erbse_blockfilter1; end; _buf = _buf.join(\"\".freeze)}
       ruby.must_equal code
+    end
+
+    it do
+      Erbse::Parser.new.(%{<%@content = capture do %><% end %>}).must_equal [:multi, [:block, "@content = capture do ", [:multi]]]
     end
   end
 end
