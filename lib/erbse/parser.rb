@@ -4,6 +4,7 @@ module Erbse
     ERB_EXPR = /<%(=+|-|\#|@\s|%)?(.*?)[-=]?%>(\n)*/m # this is for backward-compatibility.
     # BLOCK_EXPR     = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
     BLOCK_EXPR = /\b(if|unless)\b|\sdo\s*$|\sdo\s+\|/
+    BLOCK_EXPR_OUT = /\sdo\s*$|\sdo\s+\|/
 
     # Parsing patterns
     #
@@ -33,7 +34,7 @@ module Erbse
         end
 
         if ch == ?= # <%= %>
-          if code =~ BLOCK_EXPR
+          if code =~ BLOCK_EXPR_OUT
             buffers.last << [:erb, :block, code, block = [:multi]] # picked up by our own BlockFilter.
             buffers << block
           else

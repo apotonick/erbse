@@ -125,6 +125,11 @@ blubb</b>} }
     it { eval(Erbse::Engine.new.(str)).must_equal "1" }
   end
 
+  describe "postfix conditional" do
+    let (:str) { %{<p><%= 'test' if true %></p>} }
+    it { eval(Erbse::Engine.new.(str)).must_equal "<p>test</p>" }
+  end
+
   describe "<% \"string with do\" %>" do
     it { Erbse::Parser.new.(%{<% var = "do 1" %><%= var %>}).must_equal [:multi, [:code, " var = \"do 1\" "], [:dynamic, " var "]] }
     it { Erbse::Parser.new.(%{<% var = " do 1" %><%= var %>}).must_equal [:multi, [:code, " var = \" do 1\" "], [:dynamic, " var "]] }
