@@ -125,8 +125,13 @@ blubb</b>} }
     it { eval(Erbse::Engine.new.(str)).must_equal "1" }
   end
 
-  describe "postfix conditional" do
+  describe "postfix conditional in expression tag" do
     let (:str) { %{<p><%= 'test' if true %></p>} }
+    it { eval(Erbse::Engine.new.(str)).must_equal "<p>test</p>" }
+  end
+
+  describe "postfix conditional in execution tag" do
+    let (:str) { %{<p><% foo = 'test' if true %><%= foo %></p>} }
     it { eval(Erbse::Engine.new.(str)).must_equal "<p>test</p>" }
   end
 
