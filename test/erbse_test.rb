@@ -135,6 +135,27 @@ blubb</b>} }
     it { eval(Erbse::Engine.new.(str)).must_equal "<p>test</p>" }
   end
 
+  describe "condition in multiline expression tag" do
+    let (:str) { %{<p><%= if true
+                           'test'
+                          end %></p>} }
+    it { eval(Erbse::Engine.new.(str)).must_equal "<p>test</p>" }
+  end
+
+  describe "multiline do-end-block in expression tag" do
+    let (:str) { %{<%= [1,2].map do |i|
+                 i+1
+               end.join %>} }
+    it { eval(Erbse::Engine.new.(str)).must_equal "23" }
+  end
+
+  describe "multiline {}-block in expression tag" do
+    let (:str) { %(<%= [3,1].map { |i|
+                 i+1
+               }.join %>) }
+    it { eval(Erbse::Engine.new.(str)).must_equal "42" }
+  end
+
   describe "<% \"string with do\" %>" do
     it { Erbse::Parser.new.(%{<% var = "do 1" %><%= var %>}).must_equal [:multi, [:code, " var = \"do 1\" "], [:dynamic, " var "]] }
     it { Erbse::Parser.new.(%{<% var = " do 1" %><%= var %>}).must_equal [:multi, [:code, " var = \" do 1\" "], [:dynamic, " var "]] }
