@@ -1,3 +1,8 @@
+# 0.1.2
+
+* Postfix conditionals are now parsed properly: code such as `<% puts if true %>` now works, thanks to @aiomaster's work.
+* `<%@ code %>` now requires an explicit whitespace after the `@` for backward-compatibility.
+
 # 0.1.1
 
 * Introduce the `<%@ %>` tag. This is a built-in capture mechanism. It will assign all block content to a local variable but *not* output it.
