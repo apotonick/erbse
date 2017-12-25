@@ -166,6 +166,22 @@ blubb</b>} }
     it { Erbse::Parser.new.(%{<% form do |i| %>1<% end %>}).must_equal [:multi, [:block, " form do |i| ", [:multi, [:static, "1"]]]] }
   end
 
+  describe "quoted conditional" do
+    let (:str2) { %{
+  <%= form_for do %>
+    <%= link_to "string", path, "v-if" => "trigger" %>
+  <% end %>}
+    }
+
+    it "parses quoted conditionals correctly" do
+      Erbse::Parser.new.(str2).must_equal [:multi,
+        [:erb, :block, " form_for do ", [:multi,
+          [:newline],
+          [:dynamic, " link_to \"string\", path, \"v-if\" => \"trigger\" "],
+          [:newline]]]]
+    end
+  end
+
   describe "<%@ %>" do
     let (:str) { %{<%@ content = capture do %>
   Yo!
