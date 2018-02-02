@@ -34,7 +34,7 @@ module Erbse
         end
 
         if ch == ?= # <%= %>
-          if code =~ BLOCK_EXPR
+          if code =~ BLOCK_EXEC
             buffers.last << [:erb, :block, code, block = [:multi]] # picked up by our own BlockFilter.
             buffers << block
           else
