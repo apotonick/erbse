@@ -36,7 +36,6 @@ Text
 
   describe "<% %>" do
     let (:str) { %{
-<% self %>
 <% 2.times do |i| %>
   <%= i+1 %>
   <% puts %>
@@ -49,7 +48,6 @@ Text
     }
     it "what" do
       Erbse::Parser.new.(str).must_equal [:multi,
-        [:code, " self "], [:newline],
         [:block, " 2.times do |i| ", [:multi, [:newline],
           [:dynamic, " i+1 "], [:newline],
           [:code, " puts "], [:newline]]], [:newline],
@@ -63,7 +61,7 @@ Text
       ruby = ruby.gsub("\n", "@")
 
       # ruby.must_equal %{_buf = [];  self ;  2.times do |i| ; _buf << ( i+1 );  puts ; end; _buf = _buf.join(\"\".freeze)}
-      ruby.must_equal '_buf = [];  self ; @;  2.times do |i| ; @; _buf << ( i+1 ); @;  puts ; @; end; @;  if 1 ; @; _buf << ("  Hello\n".freeze); end; @; _buf = _buf.join("".freeze)'
+      ruby.must_equal '_buf = [];  2.times do |i| ; @; _buf << ( i+1 ); @;  puts ; @; end; @;  if 1 ; @; _buf << ("  Hello\n".freeze); end; @; _buf = _buf.join("".freeze)'
     end
 
     it do
