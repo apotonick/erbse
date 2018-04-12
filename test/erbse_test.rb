@@ -41,7 +41,7 @@ Text
   <% puts %>
 <% end %>
 
-<% if 1 %>
+<% if 1 == 1 %>
   Hello
 <% end %>
 }
@@ -51,7 +51,7 @@ Text
         [:block, " 2.times do |i| ", [:multi, [:newline],
           [:dynamic, " i+1 "], [:newline],
           [:code, " puts "], [:newline]]], [:newline],
-        [:block, " if 1 ", [:multi, [:newline],
+        [:block, " if 1 == 1 ", [:multi, [:newline],
           [:static, "  Hello
 "]]], [:newline]]
     end
@@ -61,7 +61,7 @@ Text
       ruby = ruby.gsub("\n", "@")
 
       # ruby.must_equal %{_buf = [];  self ;  2.times do |i| ; _buf << ( i+1 );  puts ; end; _buf = _buf.join(\"\".freeze)}
-      ruby.must_equal '_buf = [];  2.times do |i| ; @; _buf << ( i+1 ); @;  puts ; @; end; @;  if 1 ; @; _buf << ("  Hello\n".freeze); end; @; _buf = _buf.join("".freeze)'
+      ruby.must_equal '_buf = [];  2.times do |i| ; @; _buf << ( i+1 ); @;  puts ; @; end; @;  if 1 == 1 ; @; _buf << ("  Hello\n".freeze); end; @; _buf = _buf.join("".freeze)'
     end
 
     it do
