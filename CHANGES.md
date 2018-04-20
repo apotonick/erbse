@@ -1,3 +1,7 @@
+# 0.1.3
+
+* Do not trim whitespace between ERB tags.
+
 # 0.1.2
 
 * Postfix conditionals are now parsed properly: code such as `<% puts if true %>` now works, thanks to @aiomaster's work.
