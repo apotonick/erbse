@@ -29,7 +29,7 @@ module Erbse
         pos  = match.end(0)
         ch   = indicator ? indicator[0] : nil
 
-        if text and !text.strip.empty? # text
+        if text and !text.empty? # text
           buffers.last << [:static, text]
         end
 
