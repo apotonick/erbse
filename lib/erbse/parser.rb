@@ -1,7 +1,7 @@
 module Erbse
   class Parser
-    # ERB_EXPR = /<%(=|\#)?(.*?)%>(\n)*/m # this is the desired pattern.
-    ERB_EXPR = /<%(=+|-|\#|@\s|%)?(.*?)[-=]?%>(\n)*/m # this is for backward-compatibility.
+    # ERB_EXPR = /(\n)|<%(=|\#)?(.*?)%>(\n)*/m # this is the desired pattern.
+    ERB_EXPR = /(\n)|<=|<%(=+|-|\#|@\s|%)?(.*?)[-=]?%>/m # this is for backward-compatibility.
     # BLOCK_EXPR     = /\s*((\s+|\))do|\{)(\s*\|[^|]*\|)?\s*\Z/
     BLOCK_EXPR = /\sdo\s*\z|\sdo\s+\|[^|]*\|\s*\z/
     BLOCK_EXEC = /\A\s*(if|unless)\b|#{BLOCK_EXPR}/
@@ -21,13 +21,18 @@ module Erbse
       buffers << result
       match = nil
 
-      str.scan(ERB_EXPR) do |indicator, code, newlines|
+      str.scan(ERB_EXPR) do |newline, indicator, code|
         match = Regexp.last_match
         len  = match.begin(0) - pos
 
         text = str[pos, len]
         pos  = match.end(0)
         ch   = indicator ? indicator[0] : nil
+
+        if newline
+          buffers.last << [:static, "#{text}\n"] << [:newline]
+          next
+        end
 
         if text and !text.empty? # text
           buffers.last << [:static, text]
@@ -56,10 +61,6 @@ module Erbse
             buffers.last << [:code, code]
           end
         end
-
-        # FIXME: only adds one newline.
-        # TODO: does that influence speed?
-        buffers.last << [:newline] if newlines
       end
 
       # add text after last/none ERB tag.
