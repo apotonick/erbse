@@ -1,3 +1,7 @@
+# 0.1.4
+
+* Newlines are now properly reflected in the compiled code.
+
 # 0.1.3
 
 * Do not trim whitespace between ERB tags.
