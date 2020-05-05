@@ -29,7 +29,7 @@ module Erbse
         pos  = match.end(0)
         ch   = indicator ? indicator[0] : nil
 
-        if newline
+        if newline && !text.empty?
           buffers.last << [:static, "#{text}\n"] << [:newline]
           next
         end
